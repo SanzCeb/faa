@@ -20,10 +20,10 @@ class Datos(object):
     self.supervisado = sup
     dataFile = open(nombreFichero,'r')
     numDatos = int(dataFile.readline())
-    nombreAtributos = leer_dato(dataFile)
-    tipoAtributos = leer_dato(dataFile)
-    datos = np.array([leer_dato(dataFile) for x in xrange(numDatos)])
-    
+    self.nombreAtributos = leer_dato(dataFile)
+    self.tipoAtributos = leer_dato(dataFile)
+    self.datos = np.array([leer_dato(dataFile) for x in xrange(numDatos)])
+    dataFile.close()
     
 
     
