@@ -22,6 +22,7 @@ class Datos(object):
     numDatos = int(dataFile.readline())
     self.nombreAtributos = leer_dato(dataFile)
     self.tipoAtributos = leer_dato(dataFile)
+    self.nominalAtributos = map(lambda x: True if x == 'Nominal' else False,tipoAtributos)
     self.datos = np.array([leer_dato(dataFile) for x in xrange(numDatos)])
     dataFile.close()
     
