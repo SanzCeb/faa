@@ -46,8 +46,12 @@ def codificar_atributo(diccionario, valores):
 
 def codificar_datos(diccionarios, matriz_datos):
   """Funcion que codifica el conjunto de datos leidos del fichero"""
-  return list(map(codificar_atributo,diccionarios,np.transpose(matriz_datos)))
-
+  return np.array(
+    list(
+      map (codificar_atributo,
+           diccionarios,
+           np.transpose (matriz_datos)))).transpose()
+         
 
 class Datos(object):
   
@@ -66,7 +70,7 @@ class Datos(object):
     self.nombreAtributos, self.tipoAtributos, datos_raw = leer_fichero(fichero)
     self.nominalAtributos = encontrar_nominales(self.tipoAtributos)
     self.diccionarios = crear_diccionarios(datos_raw)
-    self.datos = np.array(codificar_datos(self.diccionarios,datos_raw))
+    self.datos = codificar_datos(self.diccionarios,datos_raw)
     fichero.close()
     
   # TODO: hacer en las proximas practicas
@@ -78,6 +82,5 @@ class Datos(object):
 
 
 dataset = Datos('ConjuntosDatos/tic-tac-toe.data',True)
-
 print(dataset.datos)
-  
+
