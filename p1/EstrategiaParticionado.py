@@ -11,14 +11,12 @@ class Particion():
     self.indicesTrain= indicesTrain
     self.indicesTest= indicesTest
 
-#####################################################################################################
 
 class EstrategiaParticionado(object):
   
-  # Clase abstracta
   __metaclass__ = ABCMeta
 
-  # Atributos: deben rellenarse adecuadamente para cada estrategia concreta
+
   nombreEstrategia="null"
   numeroParticiones=0
   particiones=[]
@@ -28,7 +26,6 @@ class EstrategiaParticionado(object):
     self.numeroParticiones = numeroParticiones
 
   @abstractmethod
-  # TODO: esta funcion deben ser implementadas en cada estrategia concreta  
   def creaParticiones(self,datos,seed=None):
     pass
   
@@ -39,7 +36,7 @@ class ValidacionSimple(EstrategiaParticionado):
   
   porcentajeTest = 0
 
-  
+  """Clase que realiza el particionado tradicional"""
   def __init__(self,numeroParticiones, porcentajeTest):
     EstrategiaParticionado.__init__(self,numeroParticiones,"Validacion Simple")
     self.porcentajeTest = porcentajeTest
@@ -50,31 +47,47 @@ class ValidacionSimple(EstrategiaParticionado):
     han sido elegidos"""
     numDatos = len(datos.datos)
     numDatosTest = math.floor(self.porcentajeTest * numDatos)
-    indices = range(numDatos)
-    indicesTest = random.sample(indices,numDatosTest)
-    indicesTrain = [x for x in indices if x not in indicesTest]
-    return Particion(indicesTrain,indicesTest)
-  
+    indices = set(range(numDatos))
+    indicesTest = set(random.sample(indices,numDatosTest))
+    indicesTrain = indices.difference(indicesTest)
+    return Particion(list(indicesTrain),list(indicesTest))
+
   def creaParticiones(self,datos,seed=None):
     self.particiones = [self.__crea_particion(datos) for i in range(self.numeroParticiones)]
     return self.particiones
-      
+  
       
 #####################################################################################################      
 class ValidacionCruzada(EstrategiaParticionado):
-  
-  
-  def __init__ (self, numeroParticiones):
-    EstrategiaParticionado.__init__(self,numeroParticiones,"Validacion Cruzada")
-  # Crea particiones segun el metodo de validacion cruzada.
-  # El conjunto de entrenamiento se crea con las nfolds-1 particiones
-  # y el de test con la particion restante
-  # Esta funcion devuelve una lista de particiones (clase Particion)
-  # TODO: implementar
-  def __crear_particion(self,datos):
-    pass
-  def creaParticiones(self,datos,seed=None):   
-    random.seed(seed)
-    pass
+  def __init__ (self,k):
+    EstrategiaParticionado.__init__(self,k,"Validacion Cruzada")
     
+  def __split_list (self,sequence):
+    """Parte la lista en k folds y devuelve una lista de folds"""
+    folds = []
+    longitud_fold = len(sequence) // self.numeroParticiones
+    seek = 0
+    for i in range(self.numeroParticiones - 1):
+      last = seek + longitud_fold
+      folds.append(sequence[seek : last])
+      seek = last
+    folds.append(sequence[seek:])
+    return folds
+  def __generar_rango_permutado(datos):
+    indices = list(range(len(datos)))
+    random.shuffle(indices)
+    return indices
+  def creaParticiones(self,datos,seed=None):
+    """Parte la lista de indices en k folds
+    para luego crear las k particiones
+    permutando los distintos folds como train 
+    y como test"""
+    indices = self.__generar_rango_permutado(datos.datos)
+    folds = map(set,self.__split_list(indices))
+    indices_set = set(indices) 
+    self.particiones = [Particion(list(indices_set.difference(fold)),
+                                  list(fold))
+                        for fold in folds]
+    return self.particiones
+  
     
