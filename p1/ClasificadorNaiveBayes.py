@@ -4,8 +4,12 @@ import numpy as np
 class ClasificadorNaiveBayes(Clasificador):
 
     entrenamiento = []
-  def __tabla_discreta (valores,hipotesis,diccionario_atributo,diccionario_hipotesis):
-      pass
+  def __tabla_discreta (valores,hipotesis,diccionario_atributo,diccionario_hipotesis): 
+      for k_atributo in diccionario_atributo:
+          for k_hipotesis in diccionario_hipotesis:
+              yield k_atributo : zip(valores,hipotesis).count((k_atributo,
+                                                               k_hipotesis))
+
   def __tabla_continua (valores,diccionario):
       pass
 
