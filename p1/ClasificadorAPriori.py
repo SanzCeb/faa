@@ -7,11 +7,10 @@ class ClasificadorAPriori(Clasificador):
   # TODO: implementar
   def entrenamiento(self,datostrain,atributosDiscretos=None,diccionario=None):
     # Obtener la clase mayoritaria de los datos
-	pass
-    
+    columna_clase = [ dato[-1] for dato in datostrain ]
+    mayoritaria = max ( map(columna_clase.count, diccionario['Class']) )
     
     
   # TODO: implementar
   def clasifica(self,datostest,atributosDiscretos=None,diccionario=None):
-    # Asignar la clase mayoritaria a todos los datos
-    pass
+    return [ mayoritaria for dato in datostest ]
