@@ -27,8 +27,14 @@ class Clasificador(object):
   # Obtiene el numero de aciertos y errores para calcular la tasa de fallo
   # TODO: implementar
   def error(self,datos,pred):
-    # Aqui se compara la prediccion (pred) con las clases reales y se calcula el error    
-	pass
+    # Aqui se compara la prediccion (pred) con las clases reales y se calcula el error
+    aciertos = 0
+    total = 0 
+    for (x,y) in zip(datos,pred):
+      if x == y:
+        aciertos += 1
+      total += 1
+    return aciertos / total
     
     
   # Realiza una clasificacion utilizando una estrategia de particionado determinada
@@ -40,49 +46,5 @@ class Clasificador(object):
     # y obtenemos el error en la particion de test i
     # - Para validacion simple (hold-out): entrenamos el clasificador con la particion de train
     # y obtenemos el error en la particion test
-	pass
+        pass
       
-
-#############################################################################
-
-class ClasificadorAPriori(Clasificador):
-  
-  mayoritaria=0
-
-  # TODO: implementar
-  def entrenamiento(self,datostrain,atributosDiscretos=None,diccionario=None):
-    # Obtener la clase mayoritaria de los datos
-	pass
-    
-    
-    
-  # TODO: implementar
-  def clasifica(self,datostest,atributosDiscretos=None,diccionario=None):
-    # Asignar la clase mayoritaria a todos los datos
-    pass
-  
-  
-##############################################################################
-
-class ClasificadorNaiveBayes(Clasificador):
-
- 
-
-  # TODO: implementar
-  def entrenamiento(self,datostrain,atributosDiscretos,diccionario):
-	pass
-    
-     
-    
-  # TODO: implementar
-  def clasifica(self,datostest,atributosDiscretos,diccionario):
-    pass
-
-    
-    
-
-
-
-
-
-  
