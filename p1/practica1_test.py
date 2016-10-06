@@ -1,14 +1,16 @@
 from sys import argv
-import Datos
+from datos import Datos
+
 import EstrategiaParticionado
 import numpy
-import ClasificadorAPriori
+from ClasificadorAPriori import ClasificadorAPriori
 
-nombre_fichero = argv
+
+nombre_script,nombre_fichero = argv
 
 dataset = Datos ( nombre_fichero, True)
-estrategia = EstrategiaParticionado.ValidacionCruzada()
-clasificador = Clasificador.ClasificadorAPriori()
+estrategia = EstrategiaParticionado.ValidacionSimple(1,0.3)
+clasificador = ClasificadorAPriori()
 errores = clasificador.validacion(estrategia, dataset, clasificador)
 
 print ("Error del clasificador a priori es: ", numpy.mean(errores))

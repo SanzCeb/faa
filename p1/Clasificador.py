@@ -5,7 +5,7 @@ class Clasificador(object):
   
   # Clase abstracta
   __metaclass__ = ABCMeta
-  
+
   # Metodos abstractos que se implementan en casa clasificador concreto
   @abstractmethod
   # TODO: esta funcion deben ser implementadas en cada clasificador concreto
@@ -24,38 +24,31 @@ class Clasificador(object):
     pass
   
   
-  # Obtiene el numero de aciertos y errores para calcular la tasa de fallo
-  # TODO: implementar
   def error(self,datos,pred):
-    # Aqui se compara la prediccion (pred) con las clases reales y se calcula el error
-    aciertos = 0
+    """Se cuenta tanto el numero de errores como el total de 
+    datos clasificados, para calcular la tasa de error"""
+    errores = 0
     total = 0 
     for (x,y) in zip(datos,pred):
-      if x == y:
-        aciertos += 1
+      if x != y:
+        errores += 1
       total += 1
-    return aciertos / total
+    return errores / total
     
-    
-  # Realiza una clasificacion utilizando una estrategia de particionado determinada
-  # TODO: implementar esta funcion
+
   def validacion(self,particionado,dataset,clasificador,seed=None):
+    """Funcion que realiza una clasificacion utilizando una estrategia determinada
+    por cada particion creada por el objeto particionado"""
     def __calculaError ( particion ):
-      clasificador.entrenamientro( dataset.extraeDatosTrain(particion),
-                                   dataset.nominalAtributos,
-                                   dataset.diccionarios )
-      datosTest = dataset.extraeDatosTest ( particion )
-      prediccion = clasificador.clasifica ( datosTest,
+      clasificador.entrenamiento( dataset.extraeDatosTrain(particion),
+                                  dataset.nominalAtributos,
+                                  dataset.diccionarios )
+      datos_test = dataset.extraeDatosTest ( particion )
+      prediccion = clasificador.clasifica ( datos_test,
                                             dataset.nominalAtributos,
                                             dataset.diccionarios )
-      datosTest.transpose()
-      return self.error ( datosTest[-1], prediccion )
-    # Creamos las particiones siguiendo la estrategia llamando a particionado.creaParticiones
-    particiones = particionado.creaParticiones(dataset.datos)
-    # - Para validacion cruzada: en el bucle hasta nv entrenamos el clasificador con la particion de train i
-    error = np.mean (list(map( __calculaError, particiones)))
-    # y obtenemos el error en la particion de test i
-    # - Para validacion simple (hold-out): entrenamos el clasificador con la particion de train
-    # y obtenemos el error en la particion test
-    return error
+      return self.error ( datos_test.transpose()[-1], prediccion )
+    
+    particiones = particionado.creaParticiones(dataset)
+    return list(map(__calculaError, particiones))
       

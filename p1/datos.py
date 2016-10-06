@@ -53,6 +53,7 @@ def codificar_datos(diccionarios, matriz_datos):
                                    matriz_traspuesta))
   return np.array(traspuesta_codificada).transpose()
 
+
 class Datos(object):
     
     supervisado=True
@@ -72,15 +73,16 @@ class Datos(object):
        self.diccionarios = crear_diccionarios(datos_raw)
        self.datos = codificar_datos(self.diccionarios,datos_raw)
        fichero.close()
-       
-    def __sub_secuencia ( secuencia ):
-      return [ datos[i] for i in secuencia ]
-      
-    def extraeDatosTrain(idx):
-      return __sub_secuencia ( idx.indicesTrain )
 
-    def extraeDatosTest(idx):
-        pass __sub_secuencia ( idx.indicesTest )
+
+    def __sub_secuencia (self,secuencia ):
+         return np.array([ self.datos[i] for i in secuencia ])
+
+    def extraeDatosTrain(self,idx):
+      return self.__sub_secuencia ( idx.indicesTrain )
+
+    def extraeDatosTest(self,idx):
+      return self.__sub_secuencia ( idx.indicesTest )
 
 
 
