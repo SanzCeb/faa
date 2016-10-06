@@ -73,7 +73,7 @@ class ValidacionCruzada(EstrategiaParticionado):
       seek = last
     folds.append(sequence[seek:])
     return folds
-  def __generar_rango_permutado(datos):
+  def __generar_rango_permutado(self,datos):
     indices = list(range(len(datos)))
     random.shuffle(indices)
     return indices

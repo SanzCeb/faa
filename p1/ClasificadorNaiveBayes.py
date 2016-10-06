@@ -1,10 +1,10 @@
-import Clasificador
+from Clasificador import Clasificador
 import numpy as np
 
 class ClasificadorNaiveBayes(Clasificador):
 
     entrenamiento = []
-
+    a_prioris = []
     def __tabla_discreta (valores,hipotesis,
                           diccionario_atributo,
                           diccionario_hipotesis):
@@ -19,10 +19,7 @@ class ClasificadorNaiveBayes(Clasificador):
         pass
 
     def entrenamiento(self,datos_train,atributosDiscretos,diccionario):
-        datos_train_traspuestos = datos_train.copy()
-        datos_train_traspuestos.transpose()
-        datos_clase = datos_train_traspuestos[-1]
-
+        datos_clase = list(datos_train.transpose()[-1])
         def __genera_tabla (valores, datoDiscreto,diccionario_atributo):
             if datoDiscreto: 
                 return dict(__tabla_discreta(valores,
@@ -33,8 +30,9 @@ class ClasificadorNaiveBayes(Clasificador):
                 return __tabla_continua(valores,diccionario)
             pass
         num_datos_train = len(datos_clase)
-        aprioris = [ datos_clase.count(diccionario[value]) / num_datos_train
-                     for value in diccionario ][:-1]
+        self.a_prioris = [ datos_clase.count(dicc[key]) / num_datos_train
+                           for dicc in diccionario
+                           for key in dicc][:-1]
 
     def clasifica(self,datostest,atributosDiscretos,diccionario):
         pass
