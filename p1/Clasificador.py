@@ -40,11 +40,22 @@ class Clasificador(object):
   # Realiza una clasificacion utilizando una estrategia de particionado determinada
   # TODO: implementar esta funcion
   def validacion(self,particionado,dataset,clasificador,seed=None):
-       
+    def __calculaError ( particion ):
+      clasificador.entrenamientro( dataset.extraeDatosTrain(particion),
+                                   dataset.nominalAtributos,
+                                   dataset.diccionarios )
+      datosTest = dataset.extraeDatosTest ( particion )
+      prediccion = clasificador.clasifica ( datosTest,
+                                            dataset.nominalAtributos,
+                                            dataset.diccionarios )
+      datosTest.transpose()
+      return self.error ( datosTest[-1], prediccion )
     # Creamos las particiones siguiendo la estrategia llamando a particionado.creaParticiones
+    particiones = particionado.creaParticiones(dataset.datos)
     # - Para validacion cruzada: en el bucle hasta nv entrenamos el clasificador con la particion de train i
+    error = np.mean (list(map( __calculaError, particiones)))
     # y obtenemos el error en la particion de test i
     # - Para validacion simple (hold-out): entrenamos el clasificador con la particion de train
     # y obtenemos el error en la particion test
-        pass
+    return error
       
