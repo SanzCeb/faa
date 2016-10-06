@@ -73,12 +73,14 @@ class Datos(object):
        self.datos = codificar_datos(self.diccionarios,datos_raw)
        fichero.close()
        
-
+    def __sub_secuencia ( secuencia ):
+      return [ datos[i] for i in secuencia ]
+      
     def extraeDatosTrain(idx):
-        pass
+      return __sub_secuencia ( idx.indicesTrain )
 
     def extraeDatosTest(idx):
-        pass
+        pass __sub_secuencia ( idx.indicesTest )
 
 
 
