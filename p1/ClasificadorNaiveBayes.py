@@ -33,14 +33,15 @@ class ClasificadorNaiveBayes(Clasificador):
                          columna_atributo,
                          columna_clase,
                          conjunto_hipotesis):
-        """Funcion que calcula la gaussiana de un atributo continuo
+        """Funcion que genera la funcion de un atributo continuo
         a partir de los datos de entrenamiento"""
-        for k_hipotesis in diccionario_hipotesis:
+        for k_hipotesis in conjunto_hipotesis:
             datos_clase = [ valor
-                            for valor in zip (columna_atributo,columna_clase)
+                            for (valor,hipotesis) in
+                            zip (columna_atributo,columna_clase)
                             if hipotesis == k_hipotesis ]
-            yield k_hipotesis, stats.norm(np.mean(datos_clase),
-                                          np.std(datos_clase))
+            gaussiana = stats.norm(np.mean(datos_clase),np.std(datos_clase))
+            yield k_hipotesis, gaussiana.pdf
 
 
 
@@ -56,12 +57,13 @@ class ClasificadorNaiveBayes(Clasificador):
         casos_posibles = sum(frecuencias[atributo].values())
         #Correccion  con logaritmos para evitar valores muy cerca de cero
         return math.log(casos_favorables / casos_posibles)
-    # Implementar formula gaussiana
+
     def __calcular_verosimilitud_continua(self,
-                                          atributo,
                                           frecuencias,
+                                          atributo,
                                           hipotesis):
-        return frecuencias[hipotesis].pdf(atributo)
+
+        return frecuencias[hipotesis](atributo)
 
 
     def  __calcula__verosimilitud(self,
@@ -69,13 +71,16 @@ class ClasificadorNaiveBayes(Clasificador):
                                   atributo,
                                   esDiscreto,
                                   hipotesis):
+        """Funcion que comprueba si el atributo es discreto o no
+        para decidir que funcion debe de calcular la verosimilitud"""
         if esDiscreto:
-            return  self.__calcular_verosimilitud_discreta(frecuencias,
-                                                           atributo,
-                                                           hipotesis)
+            return self.__calcular_verosimilitud_discreta(frecuencias,
+                                                               atributo,
+                                                               hipotesis)
         else:
             return self.__calcular_verosimilitud_continua (frecuencias,
-                                                           hipotesis)
+                                                                atributo,
+                                                                hipotesis)
 
 
     def __clasifica_dato (self,dato, atributosDiscretos, diccionario ):
@@ -109,9 +114,9 @@ class ClasificadorNaiveBayes(Clasificador):
                                                   diccionario_atributo.values(),
                                                   diccionario[-1].values()))
             else:
-                return self.__tabla_continua(valores,
+                return dict(self.__tabla_continua(valores,
                                              datos_clase,
-                                             diccionario[-1].values())
+                                             diccionario[-1].values()))
 
         num_datos_train = len(datos_clase)
         self.probs_a_priori = [ datos_clase.count(dicc[key]) / num_datos_train
