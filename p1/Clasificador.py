@@ -24,7 +24,7 @@ class Clasificador(object):
     pass
   
   
-  def error(self,datos,pred):
+  def __error(self,datos,pred):
     """Se cuenta tanto el numero de errores como el total de 
     datos clasificados, para calcular la tasa de error"""
     errores = 0
@@ -40,14 +40,15 @@ class Clasificador(object):
     """Funcion que realiza una clasificacion utilizando una estrategia determinada
     por cada particion creada por el objeto particionado"""
     def __calculaError ( particion ):
-      clasificador.entrenamiento( dataset.extraeDatosTrain(particion),
+      datos_train = dataset.extraeDatosTrain(particion)
+      clasificador.entrenamiento( datos_train,
                                   dataset.nominalAtributos,
                                   dataset.diccionarios )
       datos_test = dataset.extraeDatosTest ( particion )
       prediccion = clasificador.clasifica ( datos_test,
                                             dataset.nominalAtributos,
                                             dataset.diccionarios )
-      return self.error ( datos_test.transpose()[-1], prediccion )
+      return self.__error ( datos_test.transpose()[-1], prediccion )
     
     particiones = particionado.creaParticiones(dataset)
     return list(map(__calculaError, particiones))

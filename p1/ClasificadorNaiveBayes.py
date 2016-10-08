@@ -55,14 +55,12 @@ class ClasificadorNaiveBayes(Clasificador):
         y de las frecuencias recogidas durante el entrenamiento"""
         casos_favorables = frecuencias[atributo][hipotesis]
         casos_posibles = sum(frecuencias[atributo].values())
-        #Correccion  con logaritmos para evitar valores muy cerca de cero
-        return math.log(casos_favorables / casos_posibles)
+        return (casos_favorables / casos_posibles)
 
     def __calcular_verosimilitud_continua(self,
                                           frecuencias,
                                           atributo,
                                           hipotesis):
-
         return frecuencias[hipotesis](atributo)
 
 
@@ -90,7 +88,7 @@ class ClasificadorNaiveBayes(Clasificador):
                                                                  atributo,
                                                                  esDiscreto,
                                                                  hipotesis),
-                                  self.tabla_frecuencia,
+                                  self.tablas_frecuencias,
                                   dato,
                                   atributosDiscretos)
             prob_a_priori = self.probs_a_priori[hipotesis]
@@ -123,7 +121,7 @@ class ClasificadorNaiveBayes(Clasificador):
                                 for dicc in diccionario
                                 for key in dicc][:-1]
 
-        self.tabla_frecuencia = list(map(__genera_tabla,
+        self.tablas_frecuencias = list(map(__genera_tabla,
                                       datos_atributos,
                                       atributosDiscretos,
                                       diccionario))
