@@ -92,7 +92,12 @@ class ClasificadorNaiveBayes(Clasificador):
                                   dato,
                                   atributosDiscretos)
             prob_a_priori = self.probs_a_priori[hipotesis]
-            return fp.reduce(op.mul,verosimilitudes) * prob_a_priori
+            
+            if prob_a_priori == 0 or 0 in verosimilitudes: 
+                return 0
+            else:
+                caso_favorable = fp.reduce(op.mul,verosimilitudes,prob_a_priori)
+                return math.log(caso_favorable)
 
         casos_favorables  = list(map( __num_casos_a_posteriori,
                                       diccionario[-1].values()))
