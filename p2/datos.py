@@ -63,7 +63,8 @@ class Datos(object):
     nominalAtributos=[]
     datos=np.array(())
     diccionarios=[]
-
+    means = []
+    stds = []
  
     def __init__(self, nombreFichero,sup):
        self.supervisado = sup
@@ -83,6 +84,23 @@ class Datos(object):
 
     def extraeDatosTest(self,idx):
       return self.__sub_secuencia ( idx.indicesTest )
-
+    def calcularMediasDesv (self, datosTrain):
+      datos_traspuestos = datosTrain.transpose()
+      self.means = list(map(np.mean,datos_traspuestos))
+      self.stds = list(map(np.std, datos_traspuestos))
+    def normalizarDatos(self,datos):
+      def __normalizar_atributo(datos_atributo,mean,std,esDiscreto):
+         if esDiscreto:
+           return datos_atributo
+         else:
+           return list(map(lambda x: (x - mean) / std, datos_atributo))
+      
+      datos_traspuestos = datos.transpose()
+      datos_normalizados = map(__normalizar_atributo,
+                               datos_traspuestos,
+                               self.means,
+                               self.stds,
+                               self.nominalAtributos)
+      return np.array(list(datos_normalizados)).transpose()
 
 
