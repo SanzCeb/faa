@@ -26,7 +26,7 @@ class ClasificadorKNN (Clasificador):
     def __clasifica_dato(self,dato, atributosDiscretos, diccionario):
         def __dist_euclides(dato_entrenamiento):
             def dist_eje (x,y,esDiscreto):
-                return int(x == y) if esDiscreto else (x - y) ** 2
+                return int(x != y) if esDiscreto else (x - y) ** 2
             return math.sqrt(sum(map(dist_eje,
                                      dato_entrenamiento,
                                      dato,

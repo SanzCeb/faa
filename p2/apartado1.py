@@ -11,8 +11,11 @@ particiones = estrategia.creaParticiones(tic_tac_toe)
 
 datos_train = tic_tac_toe.extraeDatosTrain(particiones[0])
 datos_test = tic_tac_toe.extraeDatosTest(particiones[0])
+print(datos_train[:-1])
+print(datos_train[-1])
+
 
 clasificador_sklearn.fit(datos_train[:-1],
                          datos_train[-1])
-print(clasificador_sklearn.predict(datos_test[:-1]))
+print(clasificador_sklearn.score(datos_test[:-1],datos_test[-1]))
 
