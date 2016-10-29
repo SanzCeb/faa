@@ -33,7 +33,7 @@ class Clasificador(object):
       if x != y:
         errores += 1
       total += 1
-    return errores / total
+    return 1 if total == 0 else errores / total
     
 
   def validacion(self,particionado,dataset,clasificador,seed=None):
@@ -49,7 +49,6 @@ class Clasificador(object):
                                             dataset.nominalAtributos,
                                             dataset.diccionarios )
       return self.__error ( datos_test[:,-1], prediccion )
-    
     particiones = particionado.creaParticiones(dataset)
     return list(map(__calculaError, particiones))
-      
+

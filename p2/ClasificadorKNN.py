@@ -15,7 +15,7 @@ class ClasificadorKNN (Clasificador):
     def __init__(self,k):
         super(ClasificadorKNN,self).__init__()
         self.k = k
-            
+
     def entrenamiento(self, datosTrain, atributosDiscretos, diccionario):
         datos_traspuestos = datosTrain.transpose()
         datos_normalizados = map(normalizar_atributo,
@@ -31,12 +31,12 @@ class ClasificadorKNN (Clasificador):
                                      dato_entrenamiento,
                                      dato,
                                      atributosDiscretos)))
-                
+
         distancias = map(__dist_euclides,self.datos)
         distancias_min = sorted(distancias)[:self.k]
         frecuencias_clases = list(map(distancias_min.count,diccionario[-1]))
         return frecuencias_clases.index(max(frecuencias_clases))
-                    
+
     def clasifica (self, datosTest, atributosDiscretos, diccionario):
         return [ self.__clasifica_dato (dato,atributosDiscretos,diccionario)
-                 for dato in datosTest ]
+                 for dato in normalizar_atributo(datosTest)]
