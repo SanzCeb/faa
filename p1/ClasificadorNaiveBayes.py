@@ -35,12 +35,14 @@ class ClasificadorNaiveBayes(Clasificador):
                          conjunto_hipotesis):
         """Funcion que genera la funcion de un atributo continuo
         a partir de los datos de entrenamiento"""
+        inc = pow(10,-6)
         for k_hipotesis in conjunto_hipotesis:
             datos_clase = [ valor
                             for (valor,hipotesis) in
                             zip (columna_atributo,columna_clase)
                             if hipotesis == k_hipotesis ]
-            gaussiana = stats.norm(np.mean(datos_clase),np.std(datos_clase))
+            gaussiana = stats.norm(np.mean(datos_clase),
+                                   np.std(datos_clase) + inc)
             yield k_hipotesis, gaussiana.pdf
 
 
@@ -55,7 +57,8 @@ class ClasificadorNaiveBayes(Clasificador):
         y de las frecuencias recogidas durante el entrenamiento"""
         casos_favorables = frecuencias[atributo][hipotesis]
         casos_posibles = sum(frecuencias[atributo].values())
-        return (casos_favorables / casos_posibles)
+        
+        return 0 if casos_posibles == 0 else (casos_favorables / casos_posibles)
 
     def __calcular_verosimilitud_continua(self,
                                           frecuencias,
@@ -89,8 +92,8 @@ class ClasificadorNaiveBayes(Clasificador):
                                                                  esDiscreto,
                                                                  hipotesis),
                                   self.tablas_frecuencias,
-                                  dato,
-                                  atributosDiscretos)
+                                  dato[:-1],
+                                  atributosDiscretos[:-1])
             prob_a_priori = self.probs_a_priori[hipotesis]
             
             if prob_a_priori == 0 or 0 in verosimilitudes: 
@@ -122,15 +125,12 @@ class ClasificadorNaiveBayes(Clasificador):
                                              diccionario[-1].values()))
 
         num_datos_train = len(datos_clase)
-        self.probs_a_priori = [ datos_clase.count(dicc[key]) / num_datos_train
-                                for dicc in diccionario
-                                for key in dicc][:-1]
-
+        self.probs_a_priori = [ datos_clase.count(diccionario[-1][key]) / num_datos_train
+                                for key in diccionario[-1]]
         self.tablas_frecuencias = list(map(__genera_tabla,
                                       datos_atributos,
                                       atributosDiscretos,
                                       diccionario))
-
     def clasifica(self,datostest,atributosDiscretos,diccionario):
         return [ self.__clasifica_dato (dato,atributosDiscretos,diccionario)
                  for dato in datostest ]

@@ -1,0 +1,9 @@
+Lista de cambios:
+1. Se ha implementado la clase EstrategiaParticionado
+2. Se ha implementado la clase Validacion Simple
+3. Creacion de la clase datos
+4. Limpieza del codigo de la clase datos
+Cosas por hacer esta semana:
+1. Implementar la clase validacion cruzada
+2. Tratar de mejorar el codigo
+3. Realizar pruebas unitarias si llegamos
