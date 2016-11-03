@@ -23,12 +23,13 @@ class Clasificador(object):
   def clasifica(self,datosTest,atributosDiscretos,diccionario):
     scores = self.score(datosTest,atributosDiscretos, diccionario)
 	return np.argmax(scores, axis = 1)
+	
+	
   def score (self, datosTest, atributosDiscretos, diccionario):
 	scores = np.zeros((len(datosTest), len(diccionario[-1])))
 	preds = map(int, self.clasifica(datosTest,atributosDiscretos, diccionario))
 	scores[range(datosTest.shape[0]), preds] = 1.0 
 	return scores 
-	
   
   def __error(self,datos,pred):
     """Se cuenta tanto el numero de errores como el total de 
