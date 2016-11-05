@@ -1,8 +1,7 @@
 from abc import ABCMeta,abstractmethod
-import numpy as np 
+import numpy as np
 
 class Clasificador(object):
-  
   # Clase abstracta
   __metaclass__ = ABCMeta
 
@@ -15,21 +14,19 @@ class Clasificador(object):
   # de variables discretas
   def entrenamiento(self,datosTrain,atributosDiscretos,diccionario):
     pass
-  
-  
-  
+
+
   # TODO: esta funcion deben ser implementadas en cada clasificador concreto
   # devuelve un numpy array con las predicciones
   def clasifica(self,datosTest,atributosDiscretos,diccionario):
     scores = self.score(datosTest,atributosDiscretos, diccionario)
-	return np.argmax(scores, axis = 1)
-	
-	
+    return np.argmax(scores, axis = 1)
+
   def score (self, datosTest, atributosDiscretos, diccionario):
-	scores = np.zeros((len(datosTest), len(diccionario[-1])))
-	preds = map(int, self.clasifica(datosTest,atributosDiscretos, diccionario))
-	scores[range(datosTest.shape[0]), preds] = 1.0 
-	return scores 
+    scores = np.zeros((len(datosTest), len(diccionario[-1])))
+    preds = map(int, self.clasifica(datosTest,atributosDiscretos, diccionario))
+    scores[range(datosTest.shape[0]), preds] = 1.0 
+    return scores 
   
   def __error(self,datos,pred):
     """Se cuenta tanto el numero de errores como el total de 
