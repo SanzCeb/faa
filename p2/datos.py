@@ -43,7 +43,7 @@ def crear_diccionarios(datos):
 def codificar_atributo(diccionario, valores, discreto):
   """Funcion que transforma cada valor en su clave correspondiente en el 
   diccionario"""
-  return [diccionario[i] for i in valores] if discreto else valores
+  return [diccionario[i] for i in valores] if discreto else list(map(float,valores))
 
 def codificar_datos(diccionarios, matriz_datos, atributos_discretos):
   """Funcion que codifica el conjunto de datos leidos del fichero"""
