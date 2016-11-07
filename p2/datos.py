@@ -3,7 +3,8 @@ import numpy as np
 
 def leer_dato(fichero):
   """Lee una linea del fichero y divide la linea en tantos trozos como comas"""
-  return fichero.readline().split('\n')[0].split(',')
+  dato = fichero.readline().split('\n')[0].split(',')
+  return dato
 
 def leer_metadatos(fichero):
   """Funcion que lee el fichero y devuelve el numero de datos, 
@@ -21,7 +22,7 @@ def leer_fichero(fichero):
     return atributos,tipoAtributos,datos
 
 def es_nominal(tipo):
-  return True if tipo == 'Nominal' else False
+  return tipo == 'Nominal'
 
 def encontrar_nominales(tipoAtributos):
   """Funcion para averiguar que atributos son nominales"""
@@ -39,18 +40,18 @@ def crear_diccionarios(datos):
   datosTraspuestos = np.transpose(np.array(datos))
   return list(map(crear_diccionario, datosTraspuestos))
 
-def codificar_atributo(diccionario, valores):
+def codificar_atributo(diccionario, valores, discreto):
   """Funcion que transforma cada valor en su clave correspondiente en el 
   diccionario"""
-  return [diccionario[i] for i in valores]
+  return [diccionario[i] for i in valores] if discreto else valores
 
-
-def codificar_datos(diccionarios, matriz_datos):
+def codificar_datos(diccionarios, matriz_datos, atributos_discretos):
   """Funcion que codifica el conjunto de datos leidos del fichero"""
   matriz_traspuesta = np.transpose(matriz_datos)
   traspuesta_codificada = list(map(codificar_atributo,
-                                   diccionarios,
-                                   matriz_traspuesta))
+                                   diccionarios,                                   
+                                   matriz_traspuesta,
+                                   atributos_discretos))
   return np.array(traspuesta_codificada).transpose()
 
 
@@ -72,7 +73,7 @@ class Datos(object):
        self.nombreAtributos, self.tipoAtributos, datos_raw = leer_fichero(fichero)
        self.nominalAtributos = encontrar_nominales(self.tipoAtributos)
        self.diccionarios = crear_diccionarios(datos_raw)
-       self.datos = codificar_datos(self.diccionarios,datos_raw)
+       self.datos = codificar_datos(self.diccionarios,datos_raw,self.nominalAtributos)
        fichero.close()
 
 
