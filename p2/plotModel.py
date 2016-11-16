@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # Autor Luis Lago y Manuel Sanchez Montanes
 # Modificada por Gonzalo
-def plotModel(x,y,clase,clf,title):
+def plotModel(x,y,clase,clf,title,diccionario):
     x_min, x_max = x.min() - .2, x.max() + .2
     y_min, y_max = y.min() - .2, y.max() + .2
 
@@ -14,15 +14,12 @@ def plotModel(x,y,clase,clf,title):
 
 
     xx, yy = np.meshgrid(np.arange(x_min, x_max, hx), np.arange(y_min, y_max, hy))
-
     if isinstance(clf, Clasificador.Clasificador):	
-        z = clf.clasifica(np.c_[xx.ravel(), yy.ravel()], [False, False, True], None)   
+        z = np.array(clf.clasifica(np.c_[xx.ravel(), yy.ravel()], [False, False, True], diccionario))
     elif hasattr(clf, "decision_function"):
         z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
     else:
         z = clf.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:, 1]
-
-    
     z = z.reshape(xx.shape)    
     cm = plt.cm.RdBu
     cm_bright = ListedColormap(['#FF0000', '#0000FF'])
