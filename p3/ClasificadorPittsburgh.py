@@ -1,0 +1,50 @@
+from Clasificador import Clasificador
+from unittest import TestCase
+
+def crear_esquema( diccionarios ):
+    return list(__crear_esquema(diccionarios))
+                
+def __crear_esquema(diccionarios):
+    """metodo que devuelve la longitud de cada alelo del cromosoma
+    a partir de la lista de diccionarios"""
+    for dicc in diccionarios:
+        num_alelos = len(dicc.keys())
+        if num_alelos:
+            yield num_alelos
+
+class ClasificadorPittsburgh (Clasificador):
+
+    prob_cruce = 0.0
+    prob_mutacion = 0.0
+    prob_elitismo = 0.0
+    poblacion = 0
+    num_generaciones = 0
+        
+    def __init__(prob_cruce, prob_mutacion, prob_elitismo,
+                 poblacion, num_generaciones):
+        self.prob_cruce = prob_cruce
+        self.prob_mutacion = prob_mutacion
+        self.prob_elitismo = prob_elitismo
+        self.poblacion = poblacion
+        self.num_generaciones = num_generaciones
+
+
+
+
+class Tests (TestCase):
+#    def setUp(self):
+ #       self.clf = ClasificadorPittsburgh(0.6, 0.001, 0.05, 10, 100)
+
+    def crear_esquema_test(self):
+        diccionarios = [{'a':0,'b':3,'c':1},{'z':2, 'w':5, 'r': 10,'o':8}, {'x': 0, 'y': '1'}]
+        self.assertEqual(crear_esquema(diccionarios), [3,4,2])
+        diccionarios = [{}]
+        self.assertEqual(crear_esquema(diccionarios), [])
+        diccionarios = [{'hola':1, 'adios':0},{'haciendo':2,'un test': 2}]
+        self.assertEqual(crear_esquema(diccionarios), [2,2])
+        
+        
+        
+
+    
+    
