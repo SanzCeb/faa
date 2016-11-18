@@ -1,5 +1,7 @@
 from Clasificador import Clasificador
 from unittest import TestCase
+import random
+from datetime import datetime
 
 def crear_esquema(diccionarios):
     """metodo que devuelve la longitud de cada alelo del cromosoma
@@ -11,6 +13,14 @@ def crear_esquema(diccionarios):
             esquema.append(num_alelos)
     return esquema
 
+def mutar(individuo):
+    """Metodo que modifica un alelo aleatorio del cromosoma"""
+    individuo_mutado = individuo.copy()    
+    random.seed(datetime.now())
+    alelo = random.randint(0,len(individuo) - 1)
+    individuo_mutado[alelo] = 0 if individuo[alelo] else 1
+    return individuo_mutado
+    
 class ClasificadorPittsburgh (Clasificador):
 
     prob_cruce = 0.0
@@ -28,9 +38,13 @@ class ClasificadorPittsburgh (Clasificador):
         self.poblacion = poblacion
         self.num_generaciones = num_generaciones
 
+    
+    def fitness(self, individuo):
+        pass
+        
     def entrenamiento(self, datosTrain, atributosDiscretos, diccionario):
         self.esquema = crear_esquema(diccionario)
-        
+        pass
     
 
 
@@ -47,7 +61,12 @@ class Tests (TestCase):
         diccionarios = [{'hola':1, 'adios':0},{'haciendo':2,'un test': 2}]
         self.assertEqual(crear_esquema(diccionarios), [2,2])
         
-        
+    def mutar_test( self ):
+        """Este metodo comprueba que la diferencia entre un individuo y su mutacion 
+        directa sea de un alelo"""
+        individuo = [0,1,1,0]
+        comp_alelos = map(lambda x,y: int(x != y), individuo, mutar(individuo))
+        self.assertEqual(sum(comp_alelos),1)
         
 
     
