@@ -1,16 +1,15 @@
 from Clasificador import Clasificador
 from unittest import TestCase
 
-def crear_esquema( diccionarios ):
-    return list(__crear_esquema(diccionarios))
-                
-def __crear_esquema(diccionarios):
+def crear_esquema(diccionarios):
     """metodo que devuelve la longitud de cada alelo del cromosoma
     a partir de la lista de diccionarios"""
+    esquema = []
     for dicc in diccionarios:
         num_alelos = len(dicc.keys())
         if num_alelos:
-            yield num_alelos
+            esquema.append(num_alelos)
+    return esquema
 
 class ClasificadorPittsburgh (Clasificador):
 
@@ -19,15 +18,20 @@ class ClasificadorPittsburgh (Clasificador):
     prob_elitismo = 0.0
     poblacion = 0
     num_generaciones = 0
-        
+    esquema = []    
     def __init__(prob_cruce, prob_mutacion, prob_elitismo,
                  poblacion, num_generaciones):
+        super(ClasificadorPittsburgh, self).__init__()
         self.prob_cruce = prob_cruce
         self.prob_mutacion = prob_mutacion
         self.prob_elitismo = prob_elitismo
         self.poblacion = poblacion
         self.num_generaciones = num_generaciones
 
+    def entrenamiento(self, datosTrain, atributosDiscretos, diccionario):
+        self.esquema = crear_esquema(diccionario)
+        
+    
 
 
 
