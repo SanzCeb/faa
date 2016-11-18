@@ -1,0 +1,19 @@
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with C-x C-f and enter text in its buffer.
+
+ALGORITMO DE ENTRENAMIENTO 
+ Mientras no haya que parar 
+  Seleccion de progenitores
+  Cruce
+  Mutacion 
+  Ajuste
+  Seleccion natural (incluimos progenitores y vastagos)
+ Devolver el mas apto 
+
+
+Tareas para implementar 
+1. Crear el esquema
+2. Implementar el operador de mutacion
+3. Implementar el operador de cruce
+4. Implementar la funcion de ajuste
+5. Implementar la funcion de seleccion

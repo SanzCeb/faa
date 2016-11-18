@@ -20,7 +20,31 @@ def mutar(individuo):
     alelo = random.randint(0,len(individuo) - 1)
     individuo_mutado[alelo] = 0 if individuo[alelo] else 1
     return individuo_mutado
+
+
+def cruce (progenitor_1, progenitor_2):
+    """Metodo que realiza un cruce uniforme y devuelve dos vastagos. 
+    Los progenitores deben tener exactamente la misma estructura. En caso 
+    contrario, se devolvera None"""
     
+    vastago_1 = []
+    vastago_2 = []
+    num_alelos = len(progenitor_1)
+    
+    if num_alelos != len(progenitor_2):
+        return None
+    for i in range(num_alelos):
+        if i % 2:
+            vastago_1.append(progenitor_1[i])
+            vastago_2.append(progenitor_2[i])
+        else:
+            vastago_1.append(progenitor_2[i])
+            vastago_2.append(progenitor_1[i])
+            
+    return vastago_1,vastago_2
+        
+    
+
 class ClasificadorPittsburgh (Clasificador):
 
     prob_cruce = 0.0
@@ -67,6 +91,19 @@ class Tests (TestCase):
         individuo = [0,1,1,0]
         comp_alelos = map(lambda x,y: int(x != y), individuo, mutar(individuo))
         self.assertEqual(sum(comp_alelos),1)
+
+    def cruce_test ( self ):
+        """Probando el cruce uniforme con dos individuos de los cuales se espera 
+        dos vastagos concretos"""
+        progenitor_1 = [1,1,0,1,1]
+        progenitor_2 = [0,1,1,0,1]
+        vastago_1 = [1,1,0,0,1]
+        vastago_2 = [0,1,1,1,1]
+
+        resultado_1,resultado_2 = cruce(progenitor_1,progenitor_2)
+        self.assertEqual(vastago_1,resultado_2)
+        self.assertEqual(vastago_2,resultado_1)
+        
         
 
     
