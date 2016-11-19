@@ -52,7 +52,11 @@ class ClasificadorPittsburgh (Clasificador):
     prob_elitismo = 0.0
     poblacion = 0
     num_generaciones = 0
-    esquema = []    
+    esquema = []
+    individuo_apto = []
+    datos_train = np.array([])
+    diccionario = []
+    atributosDiscretos = []
     def __init__(prob_cruce, prob_mutacion, prob_elitismo,
                  poblacion, num_generaciones):
         super(ClasificadorPittsburgh, self).__init__()
@@ -63,13 +67,21 @@ class ClasificadorPittsburgh (Clasificador):
         self.num_generaciones = num_generaciones
 
     
-    def fitness(self, individuo):
-        pass
-        
+    def __fitness(self, individuo):
+        """Nuestra funcion de fitness devuelve el porcentaje de acierto
+        sobre los datos de entrenamiento del individuo propuesto"""
+        prediccion = self.clasifica (self.datos_train,
+                                     self.atributosDiscretos,
+                                     self.diccionario,
+                                     individuo)
+        return 1 - self.__error(self.datos_train[:,-1], prediccion)
+
     def entrenamiento(self, datosTrain, atributosDiscretos, diccionario):
         self.esquema = crear_esquema(diccionario)
         pass
-    
+
+    def clasifica(self, datosTest, atributosDiscretos, diccionario, individuo=self.individuo_apto):
+        pass
 
 
 
@@ -103,8 +115,5 @@ class Tests (TestCase):
         resultado_1,resultado_2 = cruce(progenitor_1,progenitor_2)
         self.assertEqual(vastago_1,resultado_2)
         self.assertEqual(vastago_2,resultado_1)
-        
-        
 
-    
     
