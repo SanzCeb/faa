@@ -1,6 +1,7 @@
 from Clasificador import Clasificador
 from unittest import TestCase
 import random
+import numpy as np 
 from datetime import datetime
 
 def crear_esquema(diccionarios):
@@ -26,11 +27,10 @@ def cruce (progenitor_1, progenitor_2):
     """Metodo que realiza un cruce uniforme y devuelve dos vastagos. 
     Los progenitores deben tener exactamente la misma estructura. En caso 
     contrario, se devolvera None"""
-    
     vastago_1 = []
     vastago_2 = []
     num_alelos = len(progenitor_1)
-    
+
     if num_alelos != len(progenitor_2):
         return None
     for i in range(num_alelos):
@@ -40,10 +40,35 @@ def cruce (progenitor_1, progenitor_2):
         else:
             vastago_1.append(progenitor_2[i])
             vastago_2.append(progenitor_1[i])
-            
+
     return vastago_1,vastago_2
+
+def crear_regla(esquema):
+    """Iniciamos una regla a partir de un esquema dado
+    con ceros o unos elegidos de forma aleatoria"""
+    def __crear_conjuncion(longitud):
+        return np.random.rand(longitud).round()
+    num_conjunciones = len(esquema)
+    regla = np.empty(num_conjunciones, dtype=np.ndarray)
+    for i in range(num_conjunciones):
+        regla[i] = __crear_conjuncion(esquema[i])
+    return regla
+
+class Individuo:
+    reglas = []
+
+    def __init__(esquema, num_reglas):
+        reglas = [ crear_regla(esquema) for i in range(num_reglas) ]
         
-    
+
+    def fitness (self, datos_train):
+        pass
+    def mutar(self, regla, prob_mutar):
+        pass
+    def cruce(self, regla, prob_cruce):
+        pass
+
+
 
 class ClasificadorPittsburgh (Clasificador):
 
