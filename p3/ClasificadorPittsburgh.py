@@ -82,7 +82,7 @@ class Regla:
 
     def se_cumple (self, dato):
         """Conjuncion de clausulas, se espera una lista de numpy array"""
-        for (p, q) in zip(clausulas, dato):
+        for (p, q) in zip(self.clausulas, dato):
             if not (p.se_cumple(q)):
                 return False 
         return True
@@ -199,5 +199,16 @@ class Tests (TestCase):
         self.assertTrue(clausula_3.se_cumple (clausula_4.predicados))
 
     def se_cumple_regla_test (self ):
-        pass
+        codigo_regla = [np.array([1,1]),np.array([0,1]),np.zeros((1,1))]
+        codigo_regla_2 = [np.array([1,0]),np.array([0,1])] 
+        codigo_regla_3 = [np.array([0,0]),np.array([0,1])]
+        codigo_regla_4 = [np.array([0,1]),np.array([1,0])]
+        
+        regla = Regla(codigo_regla)
+
+        self.assertTrue(regla.se_cumple(codigo_regla[:-1]))
+        self.assertTrue(regla.se_cumple(codigo_regla_2))
+        self.assertFalse(regla.se_cumple(codigo_regla_3))
+        self.assertFalse(regla.se_cumple(codigo_regla_4))
+
         
