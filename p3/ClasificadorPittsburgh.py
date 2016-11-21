@@ -4,6 +4,14 @@ import random
 import numpy as np 
 from datetime import datetime
 
+def entero_aleatorio(a,b):
+    """Devuelve un numero entero aleatorio dentro del 
+    intervalo [a,b]"""
+    random.seed(datetime.now())
+    return random.randint(a,b)
+
+
+
 def crear_esquema(diccionarios):
     """metodo que devuelve la longitud de cada alelo del cromosoma
     a partir de la lista de diccionarios"""
@@ -13,15 +21,6 @@ def crear_esquema(diccionarios):
         if num_alelos:
             esquema.append(num_alelos)
     return esquema
-
-def mutar(individuo):
-    """Metodo que modifica un alelo aleatorio del cromosoma"""
-    individuo_mutado = individuo.copy()    
-    random.seed(datetime.now())
-    alelo = random.randint(0,len(individuo) - 1)
-    individuo_mutado[alelo] = 0 if individuo[alelo] else 1
-    return individuo_mutado
-
 
 def cruce (progenitor_1, progenitor_2):
     """Metodo que realiza un cruce uniforme y devuelve dos vastagos. 
@@ -49,11 +48,50 @@ def crear_regla(esquema):
     def __crear_conjuncion(longitud):
         return np.random.rand(longitud).round()
     num_conjunciones = len(esquema)
-    regla = np.empty(num_conjunciones, dtype=np.ndarray)
+
     for i in range(num_conjunciones):
         regla[i] = __crear_conjuncion(esquema[i])
     return regla
 
+class Clausula:
+    predicados = np.array([])
+
+    def __init__(self,param):
+         if isinstance(param,np.ndarray):
+             self.predicados = param
+         else:
+             self.predicados = np.random.rand(param).round()
+        
+    def se_cumple (self, clausula):
+        """Disyuncion de predicados . Se espera un numpy array"""
+        for (p,q) in zip(self.predicados, clausula):
+            if (p == q):
+                return True
+        return False
+    def mutar ( self ):
+        i = entero_aleatorio(0,len(self.predicados) - 1)
+        self.predicados[i] = int( not self.predicados[i] )
+
+
+class Regla:
+    clausulas = []
+    conclusion = np.array([])
+    def __init__(self,esquema):
+        self.clausulas = [ Clausula(longitud) for longitud in esquema[:-1] ]
+        self.conclusion = esquema[-1]
+
+    def se_cumple (self, dato):
+        """Conjuncion de clausulas, se espera una lista de numpy array"""
+        for (p, q) in zip(clausulas, dato):
+            if not (p.se_cumple(q)):
+                return False 
+        return True
+    def mutar ( self ):
+        """Invertimos un bit aleatoria de una clausula elegida de forma 
+        tambien aleatoria"""
+        i = entero_aleatorio(0, len(self.clausulas) - 1)
+        clausulas[i].mutar()
+        
 class Individuo:
     reglas = []
 
@@ -63,8 +101,10 @@ class Individuo:
 
     def fitness (self, datos_train):
         pass
-    def mutar(self, regla, prob_mutar):
-        pass
+    def mutar(self):
+        i = entero_aleatorio(0, len(self.reglas) - 1)
+        reglas[i].mutar()
+        
     def cruce(self, regla, prob_cruce):
         pass
 
@@ -105,8 +145,8 @@ class ClasificadorPittsburgh (Clasificador):
         self.esquema = crear_esquema(diccionario)
         pass
 
-    def clasifica(self, datosTest, atributosDiscretos, diccionario, individuo=self.individuo_apto):
-        pass
+#    def clasifica(self, datosTest, atributosDiscretos, diccionario, individuo=self.individuo_apto):
+ #       pass
 
 
 
@@ -125,8 +165,12 @@ class Tests (TestCase):
     def mutar_test( self ):
         """Este metodo comprueba que la diferencia entre un individuo y su mutacion 
         directa sea de un alelo"""
-        individuo = [0,1,1,0]
-        comp_alelos = map(lambda x,y: int(x != y), individuo, mutar(individuo))
+        predicados = np.array([0,1,1,0])
+        individuo = Clausula(predicados.copy())
+        individuo.mutar()
+        comp_alelos = map(lambda x,y: int(x == int(not y)), individuo.predicados, predicados)
+        print(individuo.predicados)
+        print(predicados)
         self.assertEqual(sum(comp_alelos),1)
 
     def cruce_test ( self ):
@@ -141,4 +185,19 @@ class Tests (TestCase):
         self.assertEqual(vastago_1,resultado_2)
         self.assertEqual(vastago_2,resultado_1)
 
-    
+    def se_cumple_clausula_test ( self ):
+        """Probando la or entre dos clausulas"""
+        clausula_1 = Clausula(np.array([0,1,0,0]))
+        clausula_2 = Clausula(np.array([1,1,1,1]))
+        clausula_3 = Clausula(np.array([0,0,0,0]))
+        clausula_4 = Clausula(np.array([0,1,0,0]))
+
+        self.assertTrue(clausula_1.se_cumple( clausula_2.predicados))
+        self.assertFalse(clausula_2.se_cumple( clausula_3.predicados))
+        self.assertTrue(clausula_4.se_cumple (clausula_2.predicados))
+        self.assertTrue(clausula_1.se_cumple ( clausula_4.predicados))
+        self.assertTrue(clausula_3.se_cumple (clausula_4.predicados))
+
+    def se_cumple_regla_test (self ):
+        pass
+        
