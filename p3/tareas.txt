@@ -12,8 +12,8 @@ ALGORITMO DE ENTRENAMIENTO
 
 
 Tareas para implementar 
-1. Crear el esquema
-2. Implementar el operador de mutacion
-3. Implementar el operador de cruce
+1. Crear el esquema - Hecho
+2. Implementar el operador de mutacion - Hecho en Clausula y en Regla
+3. Implementar el operador de cruce - Pendiente
 4. Implementar la funcion de ajuste
 5. Implementar la funcion de seleccion
