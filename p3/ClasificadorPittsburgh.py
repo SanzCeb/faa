@@ -10,7 +10,9 @@ def entero_aleatorio(a,b):
     random.seed(datetime.now())
     return random.randint(a,b)
 
-
+def generar_bits (num):
+    """Genera un numpy array con bits aleatorios"""
+    return np.random.rand(num).round()
 
 def crear_esquema(diccionarios):
     """metodo que devuelve la longitud de cada alelo del cromosoma
@@ -45,12 +47,10 @@ def cruce (progenitor_1, progenitor_2):
 def crear_regla(esquema):
     """Iniciamos una regla a partir de un esquema dado
     con ceros o unos elegidos de forma aleatoria"""
-    def __crear_conjuncion(longitud):
-        return np.random.rand(longitud).round()
     num_conjunciones = len(esquema)
 
     for i in range(num_conjunciones):
-        regla[i] = __crear_conjuncion(esquema[i])
+        regla[i] = generar_bits(esquema[i])
     return regla
 
 class Clausula:
@@ -60,7 +60,7 @@ class Clausula:
          if isinstance(param,np.ndarray):
              self.predicados = param
          else:
-             self.predicados = np.random.rand(param).round()
+             self.predicados = generar_bits(param)
         
     def se_cumple (self, clausula):
         """Disyuncion de predicados . Se espera un numpy array"""
@@ -68,6 +68,16 @@ class Clausula:
             if (p == q):
                 return True
         return False
+    def cruce (self, clausula):
+        """Implementacion del cruce por dos puntos. Se basa en la idea de que
+        elegir una clausula es equivalente a establecer dos puntos de cruce"""       clausula_i = entero_aleatorio(0, len(self.predicados) - 1)
+        vastago_1 = self.predicados
+        vastago_2 = clausula.predicados
+
+        vastago_1[clausula_i] = vastago_2[clausula_i]
+        vastago_2[clausula_i] = vastago_1[clausula_i]
+
+        return vastago_1,vastago_2
     def mutar ( self ):
         i = entero_aleatorio(0,len(self.predicados) - 1)
         self.predicados[i] = int( not self.predicados[i] )
@@ -96,7 +106,7 @@ class Individuo:
     reglas = []
 
     def __init__(esquema, num_reglas):
-        reglas = [ crear_regla(esquema) for i in range(num_reglas) ]
+        reglas = [ Regla(esquema) for i in range(num_reglas) ]
         
 
     def fitness (self, datos_train):
