@@ -140,8 +140,8 @@ class Poblacion:
         [ Individuo(esquema, entero_aleatorio(1,5)) for i in range(poblacion) ]
 
     
-    def recombinacion (prob_cruce):
-        progenitores = list(seleccion_poblacion(individuos, prob_cruce))
+    def recombinacion (self,prob_cruce):
+        progenitores = list(seleccion_poblacion(self.individuos, prob_cruce))
         num_progenitores = len(progenitores)
         def __entero_aleatorio_distinto_de(i):
             individuo_i = entero_aleatorio(0,num_progenitores - 1)
@@ -152,14 +152,14 @@ class Poblacion:
         for i in range(progenitores):
             j = __entero_aleatorio_distinto_de(i)
             vastago_1,vastago_2 = progenitores[i].cruce(progenitores[j])
-            vastagos.append(vastago_1)
-            vastagos.append(vastago_2)
+            self.vastagos.append(vastago_1)
+            self.vastagos.append(vastago_2)
             
         
-    def mutacion (prob_mutacion):
+    def mutacion (self,prob_mutacion):
         for i in range(vastagos):
             if random.random() < prob_cruce:
-                vastagos[i].mutar()
+                self.vastagos[i].mutar()
 
     
 
