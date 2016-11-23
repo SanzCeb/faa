@@ -24,6 +24,12 @@ def crear_esquema(diccionarios):
             esquema.append(num_alelos)
     return esquema
 
+def seleccion_poblacion(poblacion, prob_seleccion):
+    for individuo in poblacion:
+        if random.random() < prob_cruce:
+            yield individuo
+
+
 def cruce (progenitor_1, progenitor_2):
     """Metodo que realiza un cruce uniforme y devuelve dos vastagos. 
     Los progenitores deben tener exactamente la misma estructura. En caso 
@@ -52,6 +58,9 @@ def crear_regla(esquema):
     for i in range(num_conjunciones):
         regla[i] = generar_bits(esquema[i])
     return regla
+
+
+
 
 class Clausula:
     predicados = np.array([])
@@ -116,23 +125,40 @@ class Individuo:
 
 class Poblacion:
     individuos = []
-    prob_cruce = 0.0 
-    prob_mutacion = 0.0
-    prob_elitismo = 0.0
+    vastagos = []
     poblacion = 0
     num_generaciones 0.0
     num_reglas = 0
     esquema = []
     
-    def __init__(self,prob_cruce, prob_mutacion, prob_elitismo,
-                 poblacion, esquema):
+    def __init__(self,poblacion, esquema):
         
         self.prob_cruce  = prob_cruce
         self.prob_mutacion = prob_mutacion
         self.prob_elitismo = prob_elitismo
         self.esquema = esquema 
         [ Individuo(esquema, entero_aleatorio(1,5)) for i in range(poblacion) ]
+
+    
+    def recombinacion (prob_cruce):
+
+        progenitores, num_progenitores = __seleccion_progenitores()
+        def __num_aleatorio_distinto_de(i):
+            individuo_i = entero_aleatorio(0,num_progenitores - 1)
+            while (individuo_i != i):
+                individuo_i = entero_aleatorio(0,num_progenitores - 1)
+            return individuo_i
+
+        for i in range(progenitores):
+            j = __num_aleatorio_distinto_de(i)
+            vastago_1,vastago_2 = progenitores[i].cruce(progenitores[j])
+            vastagos.append(vastago_1)
+            vastagos.append(vastago_2)
+            
         
+    def mutacion (prob_mutacion):
+        pass
+    
 
 class ClasificadorPittsburgh (Clasificador):
 
