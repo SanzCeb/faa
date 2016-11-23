@@ -141,16 +141,16 @@ class Poblacion:
 
     
     def recombinacion (prob_cruce):
-
-        progenitores, num_progenitores = __seleccion_progenitores()
-        def __num_aleatorio_distinto_de(i):
+        progenitores = list(seleccion_poblacion(individuos, prob_cruce))
+        num_progenitores = len(progenitores)
+        def __entero_aleatorio_distinto_de(i):
             individuo_i = entero_aleatorio(0,num_progenitores - 1)
-            while (individuo_i != i):
+            while (individuo_i == i):
                 individuo_i = entero_aleatorio(0,num_progenitores - 1)
             return individuo_i
 
         for i in range(progenitores):
-            j = __num_aleatorio_distinto_de(i)
+            j = __entero_aleatorio_distinto_de(i)
             vastago_1,vastago_2 = progenitores[i].cruce(progenitores[j])
             vastagos.append(vastago_1)
             vastagos.append(vastago_2)
