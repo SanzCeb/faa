@@ -68,15 +68,11 @@ class Clausula:
             if (p == q):
                 return True
         return False
-    def cruce (self, clausula):
+    def cruce (self, clausula, punto):
         """Implementacion del cruce por dos puntos. Se basa en la idea de que
-        elegir una clausula es equivalente a establecer dos puntos de cruce"""       clausula_i = entero_aleatorio(0, len(self.predicados) - 1)
+        elegir una clausula es equivalente a establecer dos puntos de cruce"""
         vastago_1 = self.predicados
         vastago_2 = clausula.predicados
-
-        vastago_1[clausula_i] = vastago_2[clausula_i]
-        vastago_2[clausula_i] = vastago_1[clausula_i]
-
         return vastago_1,vastago_2
     def mutar ( self ):
         i = entero_aleatorio(0,len(self.predicados) - 1)
@@ -118,7 +114,25 @@ class Individuo:
     def cruce(self, regla, prob_cruce):
         pass
 
-
+class Poblacion:
+    individuos = []
+    prob_cruce = 0.0 
+    prob_mutacion = 0.0
+    prob_elitismo = 0.0
+    poblacion = 0
+    num_generaciones 0.0
+    num_reglas = 0
+    esquema = []
+    
+    def __init__(self,prob_cruce, prob_mutacion, prob_elitismo,
+                 poblacion, esquema):
+        
+        self.prob_cruce  = prob_cruce
+        self.prob_mutacion = prob_mutacion
+        self.prob_elitismo = prob_elitismo
+        self.esquema = esquema 
+        [ Individuo(esquema, entero_aleatorio(1,5)) for i in range(poblacion) ]
+        
 
 class ClasificadorPittsburgh (Clasificador):
 
