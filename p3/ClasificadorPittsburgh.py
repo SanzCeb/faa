@@ -157,7 +157,10 @@ class Poblacion:
             
         
     def mutacion (prob_mutacion):
-        pass
+        for i in range(vastagos):
+            if random.random() < prob_cruce:
+                vastagos[i].mutar()
+
     
 
 class ClasificadorPittsburgh (Clasificador):
