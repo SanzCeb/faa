@@ -4,6 +4,13 @@ import random
 import numpy as np 
 from datetime import datetime
 
+
+def numero_aleatorio(a,b):
+    """Devuelve un numero flotante aleatorio dentro del 
+    intervalo [a,b]"""
+    random.seed(datetime.now())
+    return random.uniform(a,b)
+
 def entero_aleatorio(a,b):
     """Devuelve un numero entero aleatorio dentro del 
     intervalo [a,b]"""
@@ -23,12 +30,6 @@ def crear_esquema(diccionarios):
         if num_alelos:
             esquema.append(num_alelos)
     return esquema
-
-def seleccion_poblacion(poblacion, prob_seleccion):
-    for individuo in poblacion:
-        if random.random() < prob_cruce:
-            yield individuo
-
 
 def cruce (progenitor_1, progenitor_2):
     """Metodo que realiza un cruce uniforme y devuelve dos vastagos. 
@@ -77,12 +78,6 @@ class Clausula:
             if (p == q):
                 return True
         return False
-    def cruce (self, clausula, punto):
-        """Implementacion del cruce por dos puntos. Se basa en la idea de que
-        elegir una clausula es equivalente a establecer dos puntos de cruce"""
-        vastago_1 = self.predicados
-        vastago_2 = clausula.predicados
-        return vastago_1,vastago_2
     def mutar ( self ):
         i = entero_aleatorio(0,len(self.predicados) - 1)
         self.predicados[i] = int( not self.predicados[i] )
@@ -91,9 +86,11 @@ class Clausula:
 class Regla:
     clausulas = []
     conclusion = np.array([])
-    def __init__(self,esquema):
-        self.clausulas = [ Clausula(longitud) for longitud in esquema[:-1] ]
-        self.conclusion = esquema[-1]
+
+    def __init__(self,esquema=None):
+        if esquema != None:
+            self.clausulas = [ Clausula(longitud) for longitud in esquema[:-1] ]
+            self.conclusion = esquema[-1]
 
     def se_cumple (self, dato):
         """Conjuncion de clausulas, se espera una lista de numpy array"""
@@ -101,6 +98,18 @@ class Regla:
             if not (p.se_cumple(q)):
                 return False 
         return True
+    def cruce (self, regla, punto):
+        """Implementacion del cruce por en un punto. Se basa en la idea de que
+        elegir una clausula es equivalente a establecer dos puntos de cruce"""
+        vastago_1 = Regla()
+        vastago_2 = Regla()
+
+        vastago_1.clausulas = self.clausulas[:punto] + regla.clausulas[punto:]
+        vastago_2.clausulas = regla.clausulas[:punto] + self.clausulas[punto:]
+        vastago_1.conclusion = regla.conclusion
+        vastago_2.conclusion = self.conclusion
+        
+        return vastago_1,vastago_2
     def mutar ( self ):
         """Invertimos un bit aleatoria de una clausula elegida de forma 
         tambien aleatoria"""
@@ -110,7 +119,7 @@ class Regla:
 class Individuo:
     reglas = []
 
-    def __init__(esquema, num_reglas):
+    def __init__(self,esquema, num_reglas):
         reglas = [ Regla(esquema) for i in range(num_reglas) ]
         
 
@@ -127,7 +136,7 @@ class Poblacion:
     individuos = []
     vastagos = []
     poblacion = 0
-    num_generaciones 0.0
+    num_generaciones = 0.0
     num_reglas = 0
     esquema = []
     
@@ -137,30 +146,39 @@ class Poblacion:
         self.prob_mutacion = prob_mutacion
         self.prob_elitismo = prob_elitismo
         self.esquema = esquema 
-        [ Individuo(esquema, entero_aleatorio(1,5)) for i in range(poblacion) ]
+        self.individuos = [ Individuo(esquema, entero_aleatorio(1,5))
+                            for i in range(poblacion) ]
+        
 
-    
+    def __ordenar_poblacion(self):
+        poblacion = map(lambda x : (x,x.fitness()), individuos)
+        return sorted(poblacion, key = lambda x : x[1])
+    def __obtener_fitness( self, poblacion_ordenada):
+        return sum(map(lambda x : x[1], poblacion_ordenada))
     def recombinacion (self,prob_cruce):
-        progenitores = list(seleccion_poblacion(self.individuos, prob_cruce))
-        num_progenitores = len(progenitores)
-        def __entero_aleatorio_distinto_de(i):
-            individuo_i = entero_aleatorio(0,num_progenitores - 1)
-            while (individuo_i == i):
-                individuo_i = entero_aleatorio(0,num_progenitores - 1)
-            return individuo_i
+        num_cruces = math.floor(len(poblacion) * prob_cruce)
+        poblacion_ordenada = self.__ordenar_poblacion()
+        fitness_total = self.__obtener_fitness(poblacion_ordenada)
 
-        for i in range(progenitores):
-            j = __entero_aleatorio_distinto_de(i)
-            vastago_1,vastago_2 = progenitores[i].cruce(progenitores[j])
-            self.vastagos.append(vastago_1)
-            self.vastagos.append(vastago_2)
+        def __escoger_individuo():
+            for individuo in poblacion_ordenada:
+                if numero_aleatorio(0, fitness_total) < individuo[1]:
+                    return individuo
+
+        for i in range(num_cruces):
+            progenitor_1 = __escoger_individuo()
+            progenitor_2 = __escoger_individuo()
+            vastago_1, vastago_2 = progenitor_1[0].cruce(progenitor_2[0])
+            vastago.append(vastago_1)
+            vastago.append(vastago_2)
             
         
     def mutacion (self,prob_mutacion):
         for i in range(vastagos):
             if random.random() < prob_cruce:
                 self.vastagos[i].mutar()
-
+    def seleccion_natural(self):
+        pass
     
 
 class ClasificadorPittsburgh (Clasificador):
