@@ -16,26 +16,8 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 from numpy.linalg import norm
+from itertools import zip_longest
 
-def producto_escalar(w,x):
-    return sum(map(mul,w,x))
-
-def sigmoidal (a):
-    if a >= 700:
-        return 1
-    elif a <= -700:
-        return 0 
-    else:
-        return 1 / (1 + math.exp(-a))
-        
-        
-def crear_vector_w(d):
-    return np.array([ random.uniform(-1,1) for i in range(d) ])
-
-    
-def crear_vector_datos(dato):
-    return np.insert(dato,0,1)
-    
 class ClasificadorRegresionLogistica(Clasificador):
     w = np.array([])
     n = 0.0 #cte aprendizaje
@@ -82,9 +64,16 @@ class ClasificadorRegresionLogistica(Clasificador):
     def score (self, datosTest, atributosDiscretos, diccionario):
         scores = np.zeros((len(datosTest),2))
         predicciones = self.clasifica(datosTest,atributosDiscretos,diccionario)
-        scores[:,0] = np.array(predicciones)
-        scores[:,1] = np.array(self.__confianza(datosTest))
+        confianzas = self.__confianza(datosTest)
+        for (pred,confianza,i) in zip_longest(predicciones,confianzas,range(datosTest.shape[0])):
+            if (pred):
+                scores[i,1] = confianza
+                scores[i,0] = 1 - confianza
+            else: 
+                scores[i,1] = 1 - confianza 
+                scores[i,0] = confianza           
         return scores
+
 
     
     
