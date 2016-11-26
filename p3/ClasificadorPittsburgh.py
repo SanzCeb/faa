@@ -3,23 +3,9 @@ from unittest import TestCase
 import random
 import numpy as np 
 from datetime import datetime
+from utils import entero_aleatorio, num_aleatorio,crear_esquema
 
-
-def numero_aleatorio(a,b):
-    """Devuelve un numero flotante aleatorio dentro del 
-    intervalo [a,b]"""
-    random.seed(datetime.now())
-    return random.uniform(a,b)
-
-def entero_aleatorio(a,b):
-    """Devuelve un numero entero aleatorio dentro del 
-    intervalo [a,b]"""
-    random.seed(datetime.now())
-    return random.randint(a,b)
-
-def generar_bits (num):
-    """Genera un numpy array con bits aleatorios"""
-    return np.random.rand(num).round()
+ 
 
 def crear_esquema(diccionarios):
     """metodo que devuelve la longitud de cada alelo del cromosoma
@@ -63,24 +49,6 @@ def crear_regla(esquema):
 
 
 
-class Clausula:
-    predicados = np.array([])
-
-    def __init__(self,param):
-         if isinstance(param,np.ndarray):
-             self.predicados = param
-         else:
-             self.predicados = generar_bits(param)
-        
-    def se_cumple (self, clausula):
-        """Disyuncion de predicados . Se espera un numpy array"""
-        for (p,q) in zip(self.predicados, clausula):
-            if (p == q):
-                return True
-        return False
-    def mutar ( self ):
-        i = entero_aleatorio(0,len(self.predicados) - 1)
-        self.predicados[i] = int( not self.predicados[i] )
 
 
 class Regla:
@@ -118,19 +86,38 @@ class Regla:
         
 class Individuo:
     reglas = []
-
-    def __init__(self,esquema, num_reglas):
-        reglas = [ Regla(esquema) for i in range(num_reglas) ]
+    esquema = []
+    num_reglas = 0
+    def __init__(self,esquema, num_reglas, reglas = None):
+        self.esquema = esquema
+        self.num_reglas = num_reglas
+        if reglas == None:
+            self.reglas = [ Regla(esquema) for i in range(num_reglas) ]
+        else:
+            self.reglas = reglas 
         
-
+    
     def fitness (self, datos_train):
         pass
     def mutar(self):
         i = entero_aleatorio(0, len(self.reglas) - 1)
         reglas[i].mutar()
         
-    def cruce(self, regla, prob_cruce):
-        pass
+    def cruce(self, progenitor):
+        """Cruzar cada regla de este individuo con una aleatoria 
+        del otro progenitor"""
+        reglas_1 = []
+        reglas_2 = []
+        progenitor_num_reglas = len(progenitor.reglas)
+        for regla in reglas:
+            i = entero_aleatorio(0, progenitor_num_reglas - 1)
+            regla_1, regla_2 = regla.cruce(progenitor.reglas[i])
+            reglas_1.append(regla_1)
+            reglas_2.append(regla_2)
+        individuo_1 = Individuo(self.esquema, self.num_reglas, reglas_1)
+        individuo_2 = Individuo(self.esquema, self.num_reglas, reglas_2)
+    
+                                           
 
 class Poblacion:
     individuos = []
@@ -153,12 +140,12 @@ class Poblacion:
     def __ordenar_poblacion(self):
         poblacion = map(lambda x : (x,x.fitness()), individuos)
         return sorted(poblacion, key = lambda x : x[1])
-    def __obtener_fitness( self, poblacion_ordenada):
+    def __obtener_fitness_total( self, poblacion_ordenada):
         return sum(map(lambda x : x[1], poblacion_ordenada))
     def recombinacion (self,prob_cruce):
         num_cruces = math.floor(len(poblacion) * prob_cruce)
         poblacion_ordenada = self.__ordenar_poblacion()
-        fitness_total = self.__obtener_fitness(poblacion_ordenada)
+        fitness_total = self.__obtener_fitness_total(poblacion_ordenada)
 
         def __escoger_individuo():
             for individuo in poblacion_ordenada:
@@ -232,42 +219,6 @@ class Tests (TestCase):
         self.assertEqual(crear_esquema(diccionarios), [])
         diccionarios = [{'hola':1, 'adios':0},{'haciendo':2,'un test': 2}]
         self.assertEqual(crear_esquema(diccionarios), [2,2])
-        
-    def mutar_test( self ):
-        """Este metodo comprueba que la diferencia entre un individuo y su mutacion 
-        directa sea de un alelo"""
-        predicados = np.array([0,1,1,0])
-        individuo = Clausula(predicados.copy())
-        individuo.mutar()
-        comp_alelos = map(lambda x,y: int(x == int(not y)), individuo.predicados, predicados)
-        print(individuo.predicados)
-        print(predicados)
-        self.assertEqual(sum(comp_alelos),1)
-
-    def cruce_test ( self ):
-        """Probando el cruce uniforme con dos individuos de los cuales se espera 
-        dos vastagos concretos"""
-        progenitor_1 = [1,1,0,1,1]
-        progenitor_2 = [0,1,1,0,1]
-        vastago_1 = [1,1,0,0,1]
-        vastago_2 = [0,1,1,1,1]
-
-        resultado_1,resultado_2 = cruce(progenitor_1,progenitor_2)
-        self.assertEqual(vastago_1,resultado_2)
-        self.assertEqual(vastago_2,resultado_1)
-
-    def se_cumple_clausula_test ( self ):
-        """Probando la or entre dos clausulas"""
-        clausula_1 = Clausula(np.array([0,1,0,0]))
-        clausula_2 = Clausula(np.array([1,1,1,1]))
-        clausula_3 = Clausula(np.array([0,0,0,0]))
-        clausula_4 = Clausula(np.array([0,1,0,0]))
-
-        self.assertTrue(clausula_1.se_cumple( clausula_2.predicados))
-        self.assertFalse(clausula_2.se_cumple( clausula_3.predicados))
-        self.assertTrue(clausula_4.se_cumple (clausula_2.predicados))
-        self.assertTrue(clausula_1.se_cumple ( clausula_4.predicados))
-        self.assertTrue(clausula_3.se_cumple (clausula_4.predicados))
 
     def se_cumple_regla_test (self ):
         codigo_regla = [np.array([1,1]),np.array([0,1]),np.zeros((1,1))]
@@ -282,4 +233,4 @@ class Tests (TestCase):
         self.assertFalse(regla.se_cumple(codigo_regla_3))
         self.assertFalse(regla.se_cumple(codigo_regla_4))
 
-        
+
