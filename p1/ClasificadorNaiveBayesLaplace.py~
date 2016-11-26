@@ -1,5 +1,0 @@
-from ClasificadorNaiveBayes import ClasificadorNaiveBayes
-
-class ClasificadorNaiveBayesLaplace (ClasificadorNaiveBayes):
-    
-    
