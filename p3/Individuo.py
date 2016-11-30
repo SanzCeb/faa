@@ -17,16 +17,18 @@ class Individuo:
             self.reglas = [ Regla(esquema) for i in range(num_reglas) ]
         else:
             self.reglas = reglas 
-        
+
+    def clasifica(self, dato):
+        for regla in self.reglas:
+            if regla.se_cumple(dato):
+                return regla.conclusion
+        return self.reglas[0].conclusion
     
     def obtener_fitness (self, datos_train):
         """Metodo que calcula el ajuste de un individuo a partir 
         de un numpy array con los datos codificados"""
         def __acierta(dato_train):
-            for regla in self.reglas:
-                if regla.se_cumple(dato_train[:-1]):
-                    return not (regla.conclusion - dato_train[-1]).any()
-            return False
+            return not (self.clasifica(dato_train[:-1]) - dato_train[-1]).any()
         self.fitness = sum(map(__acierta, datos_train)) / len(datos_train)
         return self.fitness
         
