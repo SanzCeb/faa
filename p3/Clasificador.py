@@ -28,13 +28,13 @@ class Clasificador(object):
     scores[range(datosTest.shape[0]), preds] = 1.0 
     return scores 
   
-  def __error(self,datos,pred):
+  def error(self,datos,pred):
     """Se cuenta tanto el numero de errores como el total de 
     datos clasificados, para calcular la tasa de error"""
     errores = 0
     total = 0
     for (x,y) in zip(datos,pred):
-      if x != y:
+      if (x - y).any():
         errores += 1
       total += 1
     return 1 if total == 0 else errores / total
@@ -52,7 +52,7 @@ class Clasificador(object):
       prediccion = clasificador.clasifica ( datos_test,
                                             dataset.nominalAtributos,
                                             dataset.diccionarios )
-      return self.__error ( datos_test[:,-1], prediccion )
+      return self.error ( datos_test[:,-1], prediccion )
     particiones = particionado.creaParticiones(dataset)
     return list(map(__calculaError, particiones))
 

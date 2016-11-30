@@ -36,7 +36,7 @@ class Individuo:
 
     def mutar(self):
         i = entero_aleatorio(0, len(self.reglas) - 1)
-        reglas[i].mutar()
+        self.reglas[i].mutar()
         
     def cruce(self, progenitor):
         """Cruzar cada regla de este individuo con una aleatoria 

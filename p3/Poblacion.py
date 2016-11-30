@@ -38,7 +38,7 @@ class Poblacion:
         return round(len(self.vastagos) * self.prob_mutacion)
 
     def calcular_num_supervivientes(self):
-        return round(self.tam_poblacion * self.prob_elitismo)
+        return round(self.tam_poblacion * self.tasa_elitismo)
 
     def ordenar_poblacion(self, datos_train):
         """Este metodo realiza una ordenacion de los individuos
@@ -80,15 +80,26 @@ class Poblacion:
             
     def mutacion (self):
         """Metodo que provoca la mutacion entre los vastagos"""
-        num_mutaciones = self.__calcular_num_mutaciones()
+        num_mutaciones = self.calcular_num_mutaciones()
         for i in range(num_mutaciones):
-            num = entero_aleatorio(0, len(self.vastagos - 1))
+            num = entero_aleatorio(0, len(self.vastagos) - 1)
             self.vastagos[num].mutar()
 
     def seleccion_natural(self):
+        """Funcion que genera una nueva poblacion escogiendo a los mejores 
+        de la actual y a los vastagos de la nueva"""
         num_supervivientes = self.calcular_num_supervivientes()
         num_nuevos_individuos = self.tam_poblacion - num_supervivientes
         elite = self.individuos[:num_supervivientes]
-        nuevos_individuos = self.generar_poblacion(num_nuevos_individuos)
-        self.individuos =  elite + nuevos_individuos
+        self.individuos =  elite + self.vastagos
 
+    def mejor_individuo(self):
+        """Devuelve el mejor individuo suponiendo que la lista de individuos
+        esta ordenada en funcion del fitness"""
+        return self.individuos[0]
+
+    def nueva_generacion(self, datos_train):
+        self.ordenar_poblacion(datos_train)
+        self.recombinacion()
+        self.mutacion()
+        self.seleccion_natural()
