@@ -29,6 +29,20 @@ def crear_esquema(diccionarios):
             esquema.append(num_alelos)
     return esquema
 
+<<<<<<< .working
+def generar_codigos(length):
+    """Funcion para generar el conjuntos de posibles codigos de un atributo
+    en funcion del tamaño de su conjunto"""
+    return np.identity(length)
+
+||||||| .merge-left.r90
+def generar_codigos(length):
+    """Funcion para generar el conjuntos de posibles codigos de un atributo
+    en funcion del tamaño de su conjunto"""
+    return np.identity(3)
+
+=======
+>>>>>>> .merge-right.r92
 class UtilsTests (TestCase):
         def crear_esquema_test(self):
             diccionarios = [{'a':0,'b':3,'c':1},{'z':2, 'w':5, 'r': 10,'o':8}, {'x': 0, 'y': '1'}]

@@ -1,5 +1,5 @@
 import numpy as np
-
+from utils import generar_codigos
 
 def leer_dato(fichero):
   """Lee una linea del fichero y divide la linea en tantos trozos como comas"""
@@ -32,7 +32,7 @@ def crear_diccionario(seq):
   """Funcion que asigna un codigo a cada valor unico de seq 
   y devuelve un diccionario"""
   conjunto = list(set(seq))
-  return dict(zip(conjunto,range(len(conjunto))))
+  return dict(zip(conjunto,generar_codigos(len(conjunto))))
 
 def crear_diccionarios(datos):
   """Funcion que crea un diccionario por cada atributo 
