@@ -43,9 +43,10 @@ class Individuo:
         reglas_2 = []
         progenitor_num_reglas = len(progenitor.reglas)
 
-        for regla in reglas:
+        for regla in self.reglas:
             i = entero_aleatorio(0, progenitor_num_reglas - 1)
-            regla_1, regla_2 = regla.cruce(progenitor.reglas[i])
+            punto = entero_aleatorio(0, progenitor_num_reglas - 1)
+            regla_1, regla_2 = regla.cruce(progenitor.reglas[i],punto)
             reglas_1.append(regla_1)
             reglas_2.append(regla_2)
 
