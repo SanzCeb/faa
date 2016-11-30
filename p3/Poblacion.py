@@ -1,26 +1,30 @@
 from unittest import TestCase
 from Individuo import Individuo
-from utils import entero_aleatorio
+from utils import entero_aleatorio, numero_aleatorio
 
 import math 
 
 class Poblacion:
-    individuos = None
+    individuos = []
     vastagos = []
-    poblacion = 0
+    tam_poblacion = 0
     num_generaciones = 0.0
     num_reglas = 0
     esquema = []
+    prob_mutacion = 0.0
+    tasa_elitismo = 0.0
+    prob_cruce = 0.0 
+
     
-    def __init__(self,poblacion, esquema):
-        
+    def __init__(self, tam_poblacion,esquema,
+                 prob_cruce, prob_mutacion, tasa_elitismo):
+
+        self.tam_poblacion = tam_poblacion 
         self.prob_cruce  = prob_cruce
         self.prob_mutacion = prob_mutacion
-        self.prob_elitismo = prob_elitismo
+        self.tasa_elitismo = tasa_elitismo
         self.esquema = esquema 
-        self.individuos = [ Individuo(esquema, entero_aleatorio(1,5))
-                            for i in range(poblacion) ]
-        
+        self.individuos = self.generar_poblacion(tam_poblacion)
 
     def generar_poblacion(self, tam_poblacion):
         return [ Individuo(self.esquema, entero_aleatorio(1,5))
@@ -49,11 +53,14 @@ class Poblacion:
         return poblacion_ordenada
 
     def __obtener_fitness_total( self, poblacion_ordenada):
-        return sum(map(lambda x : x[1], poblacion_ordenada))
-    def recombinacion (self,prob_cruce):
-        num_cruces = math.floor(len(poblacion) * prob_cruce)
-        poblacion_ordenada = self.__ordenar_poblacion()
-        fitness_total = self.__obtener_fitness_total(poblacion_ordenada)
+        return sum(map(lambda x : x.fitness, poblacion_ordenada))
+
+    def recombinacion (self):
+        """Metodo que implementa el cruce entre individuos utilizando
+        una seleccion proporcional al fitness si la poblacion se encuentra
+        ordenada """
+        num_cruces = self.calcular_num_cruces()
+        fitness_total = self.__obtener_fitness_total(self.individuos)
 
         def __escoger_individuo():
             extremo_inferior = 0
@@ -67,14 +74,21 @@ class Poblacion:
         for i in range(num_cruces):
             progenitor_1 = __escoger_individuo()
             progenitor_2 = __escoger_individuo()
-            vastago_1, vastago_2 = progenitor_1[0].cruce(progenitor_2[0])
-            vastago.append(vastago_1)
-            vastago.append(vastago_2)
+            vastago_1, vastago_2 = progenitor_1.cruce(progenitor_2)
+            self.vastagos.append(vastago_1)
+            self.vastagos.append(vastago_2)
             
-        
-    def mutacion (self,prob_mutacion):
-        for i in range(vastagos):
-            if random.random() < prob_cruce:
-                self.vastagos[i].mutar()
+    def mutacion (self):
+        """Metodo que provoca la mutacion entre los vastagos"""
+        num_mutaciones = self.__calcular_num_mutaciones()
+        for i in range(num_mutaciones):
+            num = entero_aleatorio(0, len(self.vastagos - 1))
+            self.vastagos[num].mutar()
+
     def seleccion_natural(self):
-        pass
+        num_supervivientes = self.calcular_num_supervivientes()
+        num_nuevos_individuos = self.tam_poblacion - num_supervivientes
+        elite = self.individuos[:num_supervivientes]
+        nuevos_individuos = self.generar_poblacion(num_nuevos_individuos)
+        self.individuos =  elite + nuevos_individuos
+
