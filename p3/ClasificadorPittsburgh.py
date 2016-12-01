@@ -40,4 +40,4 @@ class ClasificadorPittsburgh (Clasificador):
 
     def clasifica(self, datosTest, atributosDiscretos, diccionario):
         return map(lambda x : self.individuo_apto.clasifica(x),
-                   datosTest[:,:-1]) 
+                   datosTest) 

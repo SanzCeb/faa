@@ -52,6 +52,8 @@ class Clasificador(object):
       prediccion = clasificador.clasifica ( datos_test,
                                             dataset.nominalAtributos,
                                             dataset.diccionarios )
+      #print(prediccion)
+      print(datos_test)
       return self.error ( datos_test[:,-1], prediccion )
     particiones = particionado.creaParticiones(dataset)
     return list(map(__calculaError, particiones))
