@@ -38,6 +38,9 @@ def generar_conclusion(length):
     conclusion[entero_aleatorio(0,length -1)] = 1
     return conclusion
 
+def elemento_mas_frecuente(values):
+    """Funcion que devuelvue el elemento mas repetido de la lista variable de argumentos"""
+    return sorted(set(values), key = values.count)[-1]
 
 class UtilsTests (TestCase):
         def crear_esquema_test(self):
@@ -59,4 +62,8 @@ class UtilsTests (TestCase):
             for i in range(100):
                 conclusion = generar_conclusion(entero_aleatorio(1,100))
                 self.assertEqual(sum(conclusion),1)
+            
+        def elemento_mas_frecuente_test(self):
+            self.assertEqual(elemento_mas_frecuente([1,2,3,4,1]), 1)
+            
             
