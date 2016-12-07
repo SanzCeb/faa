@@ -26,35 +26,5 @@ class Clausula ():
         return str(self.predicados)
 
     
-class ClausulaTests(TestCase):
-    clausula_1 = None 
-    clausula_2 = None 
-    clausula_3 = None
-    clausula_4 = None
-    def setUp(self):
-        self.clausula_1 = Clausula(np.array([0,1,0,0]))
-        self.clausula_2 = Clausula(np.array([1,1,1,1]))
-        self.clausula_3 = Clausula(np.array([0,0,0,0]))
-        self.clausula_4 = Clausula(np.array([0,1,0,0]))
-    def se_cumple_test ( self ):
-        """Probando la or entre dos clausulas"""
 
-        self.assertTrue(self.clausula_1.se_cumple( self.clausula_2.predicados))
-        self.assertFalse(self.clausula_2.se_cumple( self.clausula_3.predicados))
-        self.assertTrue(self.clausula_4.se_cumple( self.clausula_2.predicados))
-        self.assertTrue(self.clausula_1.se_cumple( self.clausula_4.predicados))
-        self.assertTrue(self.clausula_3.se_cumple( self.clausula_4.predicados))
-    def mutar_test (self):
-        """Este metodo comprueba que una regla y su mutacion 
-        directa sea de un alelo"""
-        clausula_copia = Clausula(self.clausula_1.predicados.copy())
-        clausula_copia.mutar()
-        comp_alelos = map(lambda x,y: int(x == int(not y)),
-                          clausula_copia.predicados,
-                          self.clausula_1.predicados)
-
-        self.assertEqual(sum(comp_alelos),1)
-
-
-    
 
