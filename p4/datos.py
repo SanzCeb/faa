@@ -32,7 +32,7 @@ def crear_diccionario(seq):
   """Funcion que asigna un codigo a cada valor unico de seq 
   y devuelve un diccionario"""
   conjunto = list(set(seq))
-  return dict(zip(conjunto,generar_codigos(len(conjunto))))
+  return dict(zip(conjunto,range(len(conjunto))))
 
 def crear_diccionarios(datos):
   """Funcion que crea un diccionario por cada atributo 

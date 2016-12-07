@@ -34,7 +34,7 @@ class Clasificador(object):
     errores = 0
     total = 0
     for (x,y) in zip(datos,pred):
-      if (x - y).any():
+      if x != y:
         errores += 1
       total += 1
     return 1 if total == 0 else errores / total
