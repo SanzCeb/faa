@@ -33,7 +33,7 @@ class ClasificadorPittsburgh (Clasificador):
         for i in range(self.num_generaciones):
             self.poblacion.nueva_generacion(datosTrain)
             self.individuo_apto = self.poblacion.mejor_individuo()
-            if (self.individuo_apto.fitness == 1):
+            if (self.individuo_apto.fitness > 0.9):
                 return
             
         pass

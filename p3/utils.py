@@ -32,6 +32,13 @@ def generar_codigos(length):
     en funcion del tamaño de su conjunto"""
     return np.identity(length)
 
+def generar_conclusion(length):
+    """Funcion para generar una clausula en la que un solo predicado sea cierto"""
+    conclusion = np.zeros(length)
+    conclusion[entero_aleatorio(0,length -1)] = 1
+    return conclusion
+
+
 class UtilsTests (TestCase):
         def crear_esquema_test(self):
             diccionarios = [{'a':0,'b':3,'c':1},{'z':2, 'w':5, 'r': 10,'o':8}, {'x': 0, 'y': '1'}]
@@ -46,3 +53,10 @@ class UtilsTests (TestCase):
             self.assertFalse((codigos[0] - np.array([1,0,0])).any())
             self.assertFalse((codigos[1] - np.array([0,1,0])).any())
             self.assertFalse((codigos[2] - np.array([0,0,1])).any())
+
+        def generar_conclusion_test(self):
+
+            for i in range(100):
+                conclusion = generar_conclusion(entero_aleatorio(1,100))
+                self.assertEqual(sum(conclusion),1)
+            

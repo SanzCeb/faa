@@ -1,7 +1,7 @@
 from utils import entero_aleatorio
 from Regla import Regla
+from functools import reduce
 
-import random
 import numpy as np
 
 
@@ -57,7 +57,8 @@ class Individuo:
         individuo_2 = Individuo(self.esquema, self.num_reglas, reglas_2)
         return individuo_1, individuo_2
     
-
+    def __str__(self):
+        return reduce(lambda x,y: str(x) + "\n" + str(y), self.reglas)
     
 
     

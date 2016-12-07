@@ -1,5 +1,5 @@
 import numpy as np
-from utils import entero_aleatorio
+from utils import entero_aleatorio, generar_conclusion
 from Clausula import Clausula
 from functools import reduce
 import operator as op 
@@ -10,10 +10,10 @@ class Regla:
     def __init__(self,esquema=None):
         if esquema != None:
             self.clausulas = [ Clausula(longitud) for longitud in esquema[:-1]]
-            self.conclusion = np.array(esquema[-1])
+            self.conclusion = generar_conclusion(esquema[-1])
         else:
             self.clausulas = []
-            conclusion = np.array([])
+            conclusion = None
             
     def se_cumple (self, dato):
         """Conjuncion de clausulas, se espera una lista de numpy array"""
@@ -37,3 +37,8 @@ class Regla:
         i = entero_aleatorio(0, len(self.clausulas) - 1)
         self.clausulas[i].mutar()
 
+    def __str__(self):
+        def acc (str_1, str_2):
+            return str_1 + ' and ' + str_2
+        clausulas_str = reduce(acc, map(str,self.clausulas))
+        return 'if : ' + clausulas_str + ' then: ' + str(self.conclusion)

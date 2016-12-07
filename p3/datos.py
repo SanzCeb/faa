@@ -22,7 +22,7 @@ def leer_fichero(fichero):
     return atributos,tipoAtributos,datos
 
 def es_nominal(tipo):
-  return tipo == 'Nominal'
+  return tipo.strip().lower() == 'nominal'
 
 def encontrar_nominales(tipoAtributos):
   """Funcion para averiguar que atributos son nominales"""
@@ -37,13 +37,13 @@ def crear_diccionario(seq):
 def crear_diccionarios(datos):
   """Funcion que crea un diccionario por cada atributo 
   que posea el conjunto de datos"""
-  datosTraspuestos = np.transpose(np.array(datos))
+  datosTraspuestos = np.transpose(datos)
   return list(map(crear_diccionario, datosTraspuestos))
 
 def codificar_atributo(diccionario, valores, discreto):
   """Funcion que transforma cada valor en su clave correspondiente en el 
   diccionario"""
-  return [diccionario[i] for i in valores] if discreto else list(map(float,valores))
+  return [diccionario[i] for i in valores] if discreto else map(float,valores)
 
 def codificar_datos(diccionarios, matriz_datos, atributos_discretos):
   """Funcion que codifica el conjunto de datos leidos del fichero"""
@@ -52,7 +52,7 @@ def codificar_datos(diccionarios, matriz_datos, atributos_discretos):
                                    diccionarios,                                   
                                    matriz_traspuesta,
                                    atributos_discretos))
-  return np.array(traspuesta_codificada).transpose()
+  return np.array(traspuesta_codificada, dtype=np.ndarray).transpose()
 
 
 class Datos(object):

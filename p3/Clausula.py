@@ -22,6 +22,10 @@ class Clausula ():
         i = entero_aleatorio(0,len(self.predicados) - 1)
         self.predicados[i] = int( not self.predicados[i] )
 
+    def __repr__(self):
+        return str(self.predicados)
+
+    
 class ClausulaTests(TestCase):
     clausula_1 = None 
     clausula_2 = None 
@@ -50,5 +54,7 @@ class ClausulaTests(TestCase):
                           self.clausula_1.predicados)
 
         self.assertEqual(sum(comp_alelos),1)
-        
+
+
+    
 
