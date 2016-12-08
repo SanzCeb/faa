@@ -40,10 +40,11 @@ def crear_diccionarios(datos):
   datosTraspuestos = np.transpose(datos)
   return list(map(crear_diccionario, datosTraspuestos))
 
-def codificar_atributo(diccionario, valores, discreto):
+def codificar_atributo(dicc, valores, discreto):
   """Funcion que transforma cada valor en su clave correspondiente en el 
   diccionario"""
-  return [diccionario[i] for i in valores] if discreto else map(float,valores)
+  codificador = dicc.get if discreto else float
+  return [codificador(x) for x in valores]
 
 def codificar_datos(diccionarios, matriz_datos, atributos_discretos):
   """Funcion que codifica el conjunto de datos leidos del fichero"""
