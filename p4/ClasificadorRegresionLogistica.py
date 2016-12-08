@@ -79,16 +79,15 @@ class ClasificadorRegresionLogistica(Clasificador):
                    for vector_dato_test in vectores_datos_test]
     
     def score (self, datosTest, atributosDiscretos, diccionario):
-        scores = np.zeros((len(datosTest),2))
+        scores = np.zeros((datosTest.shape[0], 2))
         predicciones = self.clasifica(datosTest,atributosDiscretos,diccionario)
         confianzas = self.__confianza(datosTest)
-        for (pred,confianza,i) in zip_longest(predicciones,confianzas,range(datosTest.shape[0])):
-            if (pred):
-                scores[i,1] = confianza
-                scores[i,0] = 1 - confianza
-            else: 
-                scores[i,1] = 1 - confianza 
-                scores[i,0] = confianza           
+        results = zip_longest(predicciones,confianzas,range(datosTest.shape[0]))
+        for (pred,confianza,i) in results:
+            if pred:
+                scores[i,:] = (1 - confianza, confianza)
+            else:
+                scores[i,:] = (confianza, 1 - confianza)
         return scores
 
 
