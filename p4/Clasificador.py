@@ -49,9 +49,9 @@ class Clasificador(object):
                                   dataset.nominalAtributos,
                                   dataset.diccionarios )
       datos_test = dataset.extraeDatosTest ( particion )
-      prediccion = clasificador.clasifica ( datos_test,
+      prediccion = list(clasificador.clasifica ( datos_test[:,:-1],
                                             dataset.nominalAtributos,
-                                            dataset.diccionarios )
+                                            dataset.diccionarios ))
       print("Particion clasificada")
       return self.error ( datos_test[:,-1], prediccion )
     particiones = particionado.creaParticiones(dataset)
