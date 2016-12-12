@@ -53,7 +53,7 @@ def codificar_datos(diccionarios, matriz_datos, atributos_discretos):
                                    diccionarios,                                   
                                    matriz_traspuesta,
                                    atributos_discretos))
-  return np.array(traspuesta_codificada, dtype=np.ndarray).transpose()
+  return np.array(traspuesta_codificada).transpose()
 
 
 class Datos(object):
