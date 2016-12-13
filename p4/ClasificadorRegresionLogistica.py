@@ -77,7 +77,6 @@ class ClasificadorRegresionLogistica(Clasificador):
         scores = np.zeros((datosTest.shape[0], 2))
         confianzas = self.__vector_confianza(datosTest)
         for (i,confianza) in enumerate(confianzas):
-            print(confianza)
             scores[i,1] = confianza
         return scores
 

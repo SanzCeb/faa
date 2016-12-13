@@ -30,5 +30,5 @@ class ClasificadorEnsemble(Clasificador):
         return [ elemento_mas_frecuente(clasificacion_iesima(pos_dato))
                  for pos_dato in range(len(datosTest))]
         
-        
+    
         
